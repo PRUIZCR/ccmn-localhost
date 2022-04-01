@@ -1,5 +1,0 @@
-export enum TipoEvento {
-  RECTIFICACION = "RECTIFICACION",
-  NUEVO = "NUEVO",
-  ANULACION = "ANULACION"
-}

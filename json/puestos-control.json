@@ -1,0 +1,58 @@
+[
+  {
+     "codAduana":"019",
+     "puestosControl":[
+        {
+           "codigo":"0202",
+           "descripcion":"Carpitas"
+        }
+     ],
+     "puestosControlCAF":[
+      {
+         "codigo":"0205",
+         "descripcion":"CEBAF Eje Vial 1",
+         "ubigeo": "240302"
+      }
+   ]
+  },
+  {
+     "codAduana":"172",
+     "puestosControl":[
+        {
+           "codigo":"0202",
+           "descripcion":"Tomasiri"
+        },
+        {
+           "codigo":"0201",
+           "descripcion":"Vila Vila"
+        }
+     ],
+     "puestosControlCAF":[
+      {
+         "codigo":"0204",
+         "descripcion":"CAF Santa Rosa",
+         "ubigeo": "230111"
+      }
+   ]
+  },
+  {
+     "codAduana":"181",
+     "puestosControl":[
+        {
+           "codigo":"0205",
+           "descripcion":"Ojherani"
+        },
+        {
+           "codigo":"0203",
+           "descripcion":"Sección Atención Fronteriza (Desaguadero)"
+        }
+     ],
+     "puestosControlCAF":[
+      {
+         "codigo":"0203",
+         "descripcion":"CEBAF Desaguadero",
+         "ubigeo": "210402"
+      }
+   ]
+  }
+]

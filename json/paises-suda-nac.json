@@ -1,0 +1,14 @@
+[
+  {"codigo":"AR","descripcion":"ARGENTINA"},
+  {"codigo":"BO","descripcion":"BOLIVIA"},
+  {"codigo":"BR","descripcion":"BRAZIL"},
+  {"codigo":"CO","descripcion":"COLOMBIA"},
+  {"codigo":"CL","descripcion":"CHILE"},
+  {"codigo":"EC","descripcion":"ECUADOR"},
+  {"codigo":"PY","descripcion":"PARAGUAY"},
+  {"codigo":"UY","descripcion":"URUGUAY"},
+  {"codigo":"VE","descripcion":"VENEZUELA"},
+  {"codigo":"PE","descripcion":"PERU"},
+  {"codigo":"GY","descripcion":"GUYANA"},
+  {"codigo":"SR","descripcion":"SURINAME"}
+]

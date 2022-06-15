@@ -1,0 +1,28 @@
+[
+
+    {
+        "tipo": 2,
+        "codigo": "01",
+        "descripcion": "01-REGISTRADA"
+    },
+    {
+        "tipo": 2,
+        "codigo": "02",
+        "descripcion": "02-EN PROCESO"
+    },
+    {
+        "tipo": 2,
+        "codigo": "03",
+        "descripcion": "03-ACEPTADA"
+    },
+    {
+        "tipo": 2,
+        "codigo": "04",
+        "descripcion": "04-RECHAZADA"
+    },
+    {
+        "tipo": 2,
+        "codigo": "05",
+        "descripcion": "05-ANULADA"
+    }
+]

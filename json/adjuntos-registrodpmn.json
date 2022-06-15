@@ -1,0 +1,6 @@
+[
+  {"codigo":"01","descripcion":"Guia de remisión del remitente"},
+  {"codigo":"02","descripcion":"Carta Porte"},
+  {"codigo":"03","descripcion":"Factura"},
+  {"codigo":"04","descripcion":"Boleta de venta"}
+]

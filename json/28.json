@@ -1,0 +1,18 @@
+[
+  {"codigo":"0","descripcion":"CED - CEDULA DE IDENTIFICACION"},
+  {"codigo":"17","descripcion":"CEDULA DE CIUDADANÍA"},
+  {"codigo":"16","descripcion":"CFFAA - CARNET DE FUERZAS ARMANDAS"},
+  {"codigo":"19","descripcion":"CODIGO ADUANERO CENTRO CONTROL FRONTERIZO"},
+  {"codigo":"14","descripcion":"CODIGO ADUANERO DE TRANSPORTISTA TERRESTRE"},
+  {"codigo":"G","descripcion":"CUIT - CUIT CHILE"},
+  {"codigo":"3","descripcion":"DNI - DOCUMENTO NACIONAL DE IDENTIDAD"},
+  {"codigo":"4","descripcion":"RUC - REGISTRO UNICO DE CONTRIBUYENTE"},
+  {"codigo":"2","descripcion":"L.E - LIBRETA ELECTORAL"},
+  {"codigo":"18","descripcion":"LIBRETA DE TRIPULANTE TERRESTRE"},
+  {"codigo":"6","descripcion":"PAS - PASAPORTE"},
+  {"codigo":"1","descripcion":"PTP- / L.T"},
+  {"codigo":"21","descripcion":"PTP - PERMISO TEMPORAL DE PERMANENCIA"},
+  {"codigo":"20","descripcion":"REGISTRO TRIBUTARIO EXTRANJERO"},
+  {"codigo":"9","descripcion":"SAL - SALVOCONDUCTO"},
+  {"codigo":"15","descripcion":"UN - UNIDAD ORGANIZACIONAL SUNAT"}
+]

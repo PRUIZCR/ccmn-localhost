@@ -1,0 +1,15 @@
+[
+  {"codigo":"01","descripcion":"01-Venta"},
+  {"codigo":"02","descripcion":"02-Venta sujeta a confirmaci\u00f3n del comprador"},
+  {"codigo":"03","descripcion":"03-Compra"},
+  {"codigo":"04","descripcion":"04-Consignaci\u00f3n"},
+  {"codigo":"05","descripcion":"05-Devoluci\u00f3n"},
+  {"codigo":"06","descripcion":"06-Traslado entre establecimiento de misma empresa"},
+  {"codigo":"07","descripcion":"07-Traslado de bienes para transformaci\u00f3n"},
+  {"codigo":"08","descripcion":"08-Recojo de bienes transformados"},
+  {"codigo":"09","descripcion":"09-Traslado de emisor itinerante de comprobante de pago"},
+  {"codigo":"10","descripcion":"10-Traslado zona primaria"},
+  {"codigo":"11","descripcion":"11-Importaci\u00f3n"},
+  {"codigo":"12","descripcion":"12-Exportaci\u00f3n"},
+  {"codigo":"13","descripcion":"13-Otros"}
+]

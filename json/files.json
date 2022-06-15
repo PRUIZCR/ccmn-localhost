@@ -1,0 +1,22 @@
+{
+    "data": 
+    [
+        {
+            "label": "De Datos Generales",
+            "codigo": "01"
+
+           
+        },
+        {
+            "label": "De la Descarga",
+            "codigo": "02"
+
+           
+        },
+        {
+            "label": "De Documentos de translado",
+            "codigo": "03"
+
+        }
+    ]
+  }

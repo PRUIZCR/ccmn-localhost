@@ -1,0 +1,180 @@
+<form id="frmArchivoAdjunto" name="frmArchivoAdjunto" [formGroup]="adjuntosForm">
+    <fieldset class="form-group scheduler-border" >
+      <legend class="scheduler-border">Datos del Archivo</legend>
+      <div class="row">
+        <div class="col-3">Tipo Documento (*):</div>
+        <div class="col-9">
+          <select id="selTipoDocumento" name="selTipoDocumento" class="form-control form-select"
+            [ngClass]="{'is-invalid': frmCtrlTipoDocumento.errors?.required}"
+            formControlName="tipoDocumento">
+            <option *ngFor="let tipoDocAdj of catalogoTipoDocAdjuntos"
+                [value]="tipoDocAdj.codDatacat" >
+                {{tipoDocAdj.codDatacat + " - " + tipoDocAdj.desDataCat}}
+            </option>
+          </select>
+          <div
+            *ngIf="frmCtrlTipoDocumento.errors?.required"
+            class="invalid-feedback">
+            Debe seleccionar el tipo de documento
+          </div>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-3">Archivo (*):</div>
+        <div class="col-9">
+            <input #inputArchivo type="file" id="customFileLang" accept=".jpg, .pdf" (change)="onFileSelected($event)" >
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col">&nbsp;</div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-12">Los campos marcados con (*) son obligatorios. El archivo que se adjunte debe ser un PDF o JPG.</div>
+      </div>
+    </fieldset>
+  </form>
+  <div class="row top-buffer justify-content-center">
+    <div class="col-1">
+      <button type="button" id="btnAddArchivo" class="btn btn-primary btn-sm btn-block" (click) = "adjuntarArchivo()" >
+        Adjuntar
+      </button>
+    </div>
+  </div>
+  <div class="row top-buffer">
+    <div class="col">&nbsp;</div>
+  </div>
+  <div class="row top-buffer">
+    <p-table [value]="archivosCcmn" [paginator]="archivosCcmn.length > 0" [rows]="10"
+      [showCurrentPageReport]="archivosCcmn.length > 0" dataKey="id" [rowHover]="true"
+      [resizableColumns]="true" [responsive]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      styleClass="p-datatable-sm" [rowsPerPageOptions]="[10,25,50]">
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 5%">&Igrave;tem</th>
+              <th style="width: 25%">Tipo de documento</th>
+              <th style="width: 40%">Nombre del archivo</th>
+              <th style="width: 20%">Fecha de registro</th>
+              <th style="width: 10%">Acci&oacute;n</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan = "5" class="text-center">No hay registros</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-archivo let-rowIndex="rowIndex">
+          <tr>
+              <td>{{rowIndex + 1}}</td>
+              <td>{{archivo.codTipoDocumento + "-" + archivo.desTipoDocumento}}</td>
+              <td>
+                <a href="javascript:void(0);" (click) = "descargarArchivo(archivo)" class="text-decoration-none">
+                  {{archivo.nomArchivo}}
+                </a>
+              </td>
+              <td>{{archivo.fecRegistro | date:'dd/MM/yyyy h:mm a'}}</td>
+              <td>
+                <button type="button" class="btn btn-link" (click) = "eliminarArchivo(archivo)" >
+                  <i class="bi bi-trash-fill" style="font-size: 1.5rem"></i>
+                </button>
+              </td>
+          </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="row top-buffer">
+    <div class="col">&nbsp;</div>
+  </div>
+  <div class="row top-buffer">
+    <div class="col">&nbsp;</div>
+  </div>
+  <div class="row top-buffer justify-content-between">
+    <div class="col-2">
+      <button type="button" id="btnAnterior" class="btn btn-outline-success btn-lg btn-block"
+        (click) = "irPaginaAnterior()" >
+        <i class="bi bi-arrow-left-circle-fill"></i>
+        &nbsp; Retroceder
+      </button>
+    </div>
+    <div class="col-3">
+      <div class="row">
+        <div class="col">
+          <button type="button" id="btnSiguiente" class="btn btn-success btn-lg btn-block" (click)="RectificarCcmn()">
+            Rectificar &nbsp;
+            <i class="bi bi-arrow-right-circle-fill"></i>
+          </button>
+        </div>
+        <div class="col">
+          <button type="button" id="btnSiguiente" class="btn btn-outline-success btn-lg btn-block" (click)="cancelarGrabarCcmn()">
+            Cancelar &nbsp;
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000" [acceptLabel] = "'Si'" [rejectLabel] = "'No'" ></p-confirmDialog>
+  <p-dialog [(visible)]="mostrarDlgGuardarCcmn" [modal]="true"  [closable] = "false"
+      [style]="{width: '40vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+      <ng-container *ngIf="rptaGrabarCcmn?.estado == estado.LOADING; else tplTerminoEspera" >
+          <div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-info-circle-fill text-info" viewBox="0 0 16 16">
+              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+            </svg>
+          </div>
+          <div class="text-center top-buffer">
+            <span class="font-weight-bolder text-info">Espere un momento mientras se registra la CCMN</span>
+          </div>
+          <div class="text-center top-buffer">
+            <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8"  ></p-progressSpinner>
+          </div>
+      </ng-container>
+
+      <ng-template #tplTerminoEspera>
+        <ng-container *ngIf="rptaGrabarCcmn?.estado == estado.SUCCESS; else tplHuboError">
+          <div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check-circle-fill text-success" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+          </div>
+          <div class="text-center top-buffer">
+            <span class="font-weight-bolder text-success">
+              Se rectifico constancia de control de mercanc&iacute;a nacionalizada CCMN N&deg;&nbsp;
+              {{rptaGrabarCcmn.data.codAduana}}-{{rptaGrabarCcmn.data.codPuestoControl}}-{{rptaGrabarCcmn.data.anio}}-{{rptaGrabarCcmn.data.numero}}
+            </span>
+          </div>
+          <div class="text-center top-buffer">
+              <button type="button" id="btnAceptar" class="btn btn-success"
+              [disabled]="generandoQR" (click)="cerrarDialogGrabarCcmn()" >
+                <span class="spinner-border spinner-border-sm"
+                    *ngIf="generandoQR"
+                    role="status" aria-hidden="true"></span>
+                Aceptar
+              </button>
+          </div>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #tplHuboError>
+        <ng-container *ngIf="rptaGrabarCcmn?.estado == estado.ERROR" >
+          <div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+            </svg>
+          </div>
+          <div class="text-center top-buffer">
+            <!-- <span class="font-weight-bolder text-danger" *ngIf="rptaGrabarCcmn?.mensajes?.length > 0" >
+              {{rptaGrabarCcmn.mensajes[0].msg}}
+            </span> -->
+            <span class="font-weight-bolder text-danger">
+              Ha ocurrido un error al rectificar la descarga provisional de mercanc&iacute;a nacionalizada CCMN
+            </span>
+          </div>
+          <div class="text-center top-buffer">
+              <button type="button" id="btnCerrar" class="btn btn-danger" (click)="cerrarDialogGrabarCcmn()">Aceptar</button>
+          </div>
+        </ng-container>
+      </ng-template>
+  </p-dialog>

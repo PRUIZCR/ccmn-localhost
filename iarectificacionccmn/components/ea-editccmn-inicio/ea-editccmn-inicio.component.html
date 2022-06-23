@@ -1,0 +1,156 @@
+<div class="container-fluid">
+  <div class="row p-2">
+      <div class="col">
+          <div class="card">
+              <div class="row">
+                  <div class="col">
+                    <div id="container" class="card-header text-white text-center bg-primary">
+                          <strong>Rectificaci&oacute;n de Constancia de Control de Mercanc&iacute;a Nacionalizada - CCMN</strong>
+                      </div>
+                  </div>
+              </div>
+              <div class="row p-2" *ngIf="tipoRegistro!=estado.CAF && tipoRegistro!=estado.TTA">
+                <div class="col">
+                  <form [formGroup]="controlPasoForm" id="frmControlPaso" name="frmControlPaso">
+                    <fieldset class="form-group scheduler-border" >
+                      <legend class="scheduler-border">Datos del la CCMN </legend>
+                          <div class="row">
+                              <div class="col-2">
+                                <label for="txtNumCcmn">No. de CCMN:</label>
+                              </div>
+                              <div class="col-2">
+                                <input type="text" class="form-control" id="txtNumCcmn" name="txtNumCcmn"
+                                  formControlName="numCcmn" [readonly]="true" >
+                              </div>
+                              <div class="col-2">
+                                <label for="txtFecNumeracion">Fecha de numeraci&oacute;n</label>
+                              </div>
+                              <div class="col-2">
+                                <input type="text" class="form-control" id="txtFecRegistro" name="txtFecRegistro"
+                                  formControlName="fechaRegistro" [readonly]="true" >
+                              </div>
+                              <div class="col-2">
+                                <label for="txtEstado">Estado:</label>
+                              </div>
+                              <div class="col-2">
+                                <input type="text" class="form-control" id="txtEstado" name="txtEstado"
+                                  formControlName="estado" [readonly]="true" >
+                              </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-2">
+                              <label for="txtPaisPlaca">Pa&iacute;s Placa:</label>
+                            </div>
+                            <div class="col-2">
+                              <input type="text" class="form-control" id="txtPaisPlaca" name="txtPaisPlaca"
+                                formControlName="paisPlaca" [readonly]="true" >
+                            </div>
+                            <div class="col-2">
+                              <label for="txtPlaca">Placa:</label>
+                            </div>
+                            <div class="col-2">
+                              <input type="text" class="form-control" id="txtPlaca" name="txtPlaca"
+                                formControlName="placa" [readonly]="true" >
+                            </div>
+
+                                <div class="col-2" *ngIf="tipoRegistro==estado.CARGA" else #TemplateParticular>
+                                  <label for="txtPlacaCarreta">Placa Carreta:</label>
+                                </div>
+                                <div class="col-2" *ngIf="tipoRegistro==estado.CARGA" else #TemplateParticular>
+                                  <input type="text" class="form-control" id="txtPlacaCarreta" name="txtPlacaCarreta"
+                                    formControlName="placaCarreta" [readonly]="true" >
+                                </div>
+
+                            <ng-template #TemplateParticular>
+                            </ng-template>
+
+                          </div>
+
+                    </fieldset>
+                    <!-- <fieldset class="form-group scheduler-border" >
+                        <legend> </legend>
+                        <div class="row form-inline">
+
+                              <div class="col-1">
+                                <label class="col-form-label" for="txtNumPlaca">Placa:</label>
+                              </div>
+
+                              <div class="col-1">
+                                <input id = "txtPaisPlaca" name="txtPaisPlaca" type="text" class="form-control"  formControlName="paisPlaca" [readonly]="true">
+                              </div>
+                              <div class="col-1">
+                                <input id = "txtNumPlaca" name="txtNumPlaca" type="text" class="form-control"  formControlName="numPlaca" [readonly]="true">
+                              </div>
+
+                              <div class="col-1">
+                                <label class="col-form-label" for="txtControl">Control:</label>
+                              </div>
+                              <div class="col-2">
+                                <input id = "txtControl" name="txtControl" type="text" class="form-control"  formControlName="canalControl"[readonly]="true" >
+                              </div>
+                              <div class="col-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" *ngIf="getColorControl(pci) != null" width="32"
+                                  height="32" [attr.fill]="getColorControl(pci)" class="bi bi-circle-fill"
+                                  viewBox="0 0 16 16">
+                                  <circle cx="8" cy="8" r="8" />
+                                </svg>
+                              </div>
+
+
+                              <div class="col-3">
+                                <label class="col-form-label" for="txtControlPaso">Número de Control de Paso:</label>
+                              </div>
+                              <div class="col-2">
+                                <input id = "txtControlPaso" name="txtControlPaso" type="text" class="form-control"  formControlName="controlPaso" [readonly]="true">
+                              </div>
+                        </div>
+                    </fieldset> -->
+                  </form>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <div class="wizard2">
+                          <div class="step" [ngClass]="{'current' : pasoActual >= 1}"  >
+                            <div class="stepTitle">
+                              Paso 1
+                            </div>
+                            <div class="stepDesc">
+                              Rectificaci&oacute;n de la CCMN - Datos Previos
+                            </div>
+                          </div>
+                          <div class="step" [ngClass]="{'current' : pasoActual >= 2}">
+                            <div class="stepTitle">
+                              Paso 2
+                            </div>
+                            <div class="stepDesc">
+                              Datos de Empresa, conductor y Complementarios
+                            </div>
+                          </div>
+                          <div class="step" [ngClass]="{'current' : pasoActual >= 3}">
+                            <div class="stepTitle">
+                              Paso 3
+                            </div>
+                            <div class="stepDesc">
+                              Datos del Comprobante de pago, Carta Porte,  Declaraci&oacute;n
+                            </div>
+                          </div>
+                          <div class="step" [ngClass]="{'current' : pasoActual >= 4}">
+                              <div class="stepTitle">
+                                Paso 4
+                              </div>
+                              <div class="stepDesc">
+                                Archivos adjuntos
+                              </div>
+                            </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="card-body">
+                  <router-outlet></router-outlet>
+              </div>
+            </div>
+      </div>
+  </div>
+</div>

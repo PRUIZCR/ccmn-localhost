@@ -1,21 +1,21 @@
 {
-    "data": 
+    "data":
     [
         {
-            "label": "De Datos Generales",
-            "codigo": "01"
+            "label":"De datos generales",
+            "codigo":"01"
 
-           
+
         },
         {
-            "label": "De la Descarga",
-            "codigo": "02"
+            "label":"De la descarga",
+            "codigo":"02"
 
-           
+
         },
         {
-            "label": "De Documentos de translado",
-            "codigo": "03"
+            "label":"De documentos de translado asociados",
+            "codigo":"03"
 
         }
     ]

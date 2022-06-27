@@ -1,0 +1,117 @@
+<div class="col-md-12">
+
+     <!--Row 1 Numero de control de paso-->
+     <div class="col">
+        <form [formGroup]="motivoForm" id="frmControlPaso" name="frmControlPaso">
+
+           <br>
+           <div class="card border-primary mb-3 p-3" style="max-width: 100%;">
+                <div class="row  mb-3" >
+                    <div class="col-2">
+                      <label for="txtNumCtrlPaso">Motivo de Rectificaci&oacute;n:</label>
+                    </div>
+                    <div class="col-4">
+
+                      <p-treeSelect [(ngModel)]="selectedNodes2" selectionMode="multiple" [options]="nodes3"  [metaKeySelection]="false"
+                        (onChange)="onChangeTipoDoc()"
+                        selectionMode="checkbox"
+                        formControlName="motivoRectificacion">
+                      </p-treeSelect>
+                      <!-- <p-dropdown inputId="codMotivoTraslado" [options]="selectedNodes2"  formControlName="codMotivoTraslado"
+                      optionLabel="descripcion" optionValue="codigo" [style]="{'width':'100%'}"></p-dropdown> -->
+                    </div>
+                 </div>
+                 <div class="row  mb-3">
+                    <div class="col-2">
+                      <label for="txtFecRegistro">Observaciones</label>
+                    </div>
+                    <div class="col-10">
+                      <input type="text" class="form-control" id="txtObservaciones" name="txtObservaciones" placeholder="Observaciones"
+                        formControlName="observaciones" maxlength="200">
+                    </div>
+                   </div>
+                   <div class="row mb-3">
+                        <div class="col-2">
+                        <label for="txtFecRegistro">Jefe que Autoriza:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" id="txtNumeroRegistro" name="txtNumeroRegistro"
+                            onKeyUp="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()"
+                            (blur)="getNombreJefeAutoriza()" placeholder="Número de Registro" maxlength="4"
+                            formControlName="numeroRegistro">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" id="txtNombresApellidos" name="txtNombresApellidos"  placeholder="Apellidos y Nombres"
+                            formControlName="nombresApellidos" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-2">
+                        <label for="txtFecRegistro">N&uacute;mero de Informe:</label>
+                        </div>
+
+                        <div class="col-2">
+                          <p-dropdown inputId="codAduanaDocumento" [options]="catalogoAduanas" formControlName="codAduanaDocumento" placeholder="Seleccionar"
+                              optionLabel="desDataCat"  optionValue="codDatacat"  [style] = "{'width':'100%'}">
+                                <ng-template let-item pTemplate="selectedItem">
+                                  <div>{{item?.codDatacat}}-{{item?.desDataCat}}</div>
+                                </ng-template>
+                              <ng-template let-aduana pTemplate="item">
+                                <div>{{aduana?.codDatacat}}-{{aduana?.desDataCat}}</div>
+                              </ng-template>
+                          </p-dropdown>
+                        </div>
+
+                        <div class="col-2">
+                        <input type="text" class="form-control" id="txtArea" name="txtArea" placeholder="Área"
+                            formControlName="area" maxlength="6">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" id="txtAnio" name="txtAnio" placeholder="Año" (blur)="validarAnioDocumento()"
+                                formControlName="anio" maxlength="4">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" id="txtNumero" name="txtNumero" placeholder="Número" (blur)="getValidarNumeroInforme()"
+                                formControlName="numero" maxlength="9">
+
+                        </div>
+                        <div class="col-2" >
+                          <i class="pi pi-check" [hidden]="!esVisible" style="background-color:red 4rem"></i>
+                      </div>
+                    </div>
+                <br>
+
+            </div>
+
+
+          <div class="row top-buffer justify-content-between">
+
+            <div class="col">
+              <button type="button" id="btnSiguiente" class="btn btn-outline-success btn-lg btn-block" (click)="regresarBandeja()">
+                Retroceder &nbsp;
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <div class="col-2">
+              <button type="button" id="btnSiguiente"
+                (click)="irPaginaSiguiente()"
+                class="btn btn-success btn-lg btn-block" [disabled]="esDeshabilitado">
+                Continuar &nbsp;
+                <i class="bi bi-arrow-right-circle-fill"></i>
+              </button>
+            </div>
+
+
+          </div>
+
+
+          <br>
+          <br>
+
+        </form>
+      </div>
+
+
+</div>
+ <div><p-toast position="top-right" key="msj"></p-toast></div>

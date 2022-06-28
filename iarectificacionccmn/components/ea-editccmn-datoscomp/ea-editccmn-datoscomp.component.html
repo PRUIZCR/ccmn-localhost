@@ -1,0 +1,311 @@
+ <form id="frmDatosDeclComp" name="frmDatosDeclComp">
+      <div *ngIf="tipoBusqueda=='2'">
+        <fieldset class="form-group scheduler-border" >
+          <legend class="scheduler-border">Datos Complementarios</legend>
+          <div class="row">
+            <div class="col-1">
+              <label for="txtOrigen">Origen:</label>
+            </div>
+            <div class="col-4">
+              <p-autoComplete
+                [(ngModel)]="ubigeoSeleccionado" name="selectUbigeo"
+                [suggestions]="ubigeosFiltrados"
+                [inputStyleClass]="ubigeoSeleccionado == null ? 'ng-invalid ng-dirty' : ''"
+                [ngClass]="{'is-invalid': ubigeoSeleccionado == null}"
+                (completeMethod)="filtrarUbigeo($event)"
+                [forceSelection]="true"
+                [styleClass]="'autocompletarConDropDown'"
+                field="desDataCat"
+                [dropdown]="true">
+                <ng-template let-ubigeo pTemplate="item">
+                  <div class="ubigeo-item">
+                    <div>{{ubigeo.desDataCat}}</div>
+                  </div>
+                </ng-template>
+              </p-autoComplete>
+              <div
+                  *ngIf="ubigeoSeleccionado == null"
+                  class="invalid-feedback">
+                  Debe ingresar el origen
+              </div>
+            </div>
+            <div class="col-2">
+
+            </div>
+            <div class="col-1">
+              <label for="txtObservacion">Observaciones:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control" id="txtObservacion" name="txtObservacion" maxlength="200" [(ngModel)]="observaciones"  >
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-group scheduler-border" >
+          <legend class="scheduler-border">Datos del Comprobante de Pago</legend>
+          <div class="row">
+            <p-table [value]="rowsTblComprobante" [paginator]="rowsTblComprobante!.length > 0" [rows]="10"
+              [showCurrentPageReport]="rowsTblComprobante!.length > 0"
+              [rowHover]="true"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+              styleClass="p-datatable-sm"
+              [rowsPerPageOptions]="[10,25,50]"  >
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>&Iacute;tem</th>
+                      <th>{{descColumnaTipoComprobante}}</th>
+                      <th>RUC Remitente / Empresa</th>
+                      <th>Raz&oacute;n social del Remitente</th>
+                      <th>RUC del Destinatario</th>
+                      <th>Raz&oacute;n Social Destinatario</th>
+                      <th>Motivo traslado</th>
+                      <th class="text-center" >Destino</th>
+                      <th>Acci&oacute;n</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr >
+                  <td colspan = "8" class="text-center">No hay registros</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-comprobante>
+                  <tr>
+                      <td>{{comprobante.correlativo}}</td>
+                      <td>{{comprobante.numero}}</td>
+                      <td>{{comprobante.remitenteRuc}}</td>
+                      <td>{{comprobante.remitenteRazonSocial}}</td>
+                      <td>{{comprobante.destinatarioRuc}}</td>
+                      <td>{{comprobante.destinatarioRazonSocial}}</td>
+                      <td>{{comprobante.motivoTraslado}}</td>
+                      <td>{{comprobante.destino}}</td>
+                      <td>
+                        <button type="button" class="btn btn-link" (click)="editarComprobantePago(comprobante)">
+                          <i class="bi bi-pencil-square" style="font-size: 2rem" ></i>
+                        </button>
+                        <button type="button" class="btn btn-link" (click)="eliminarComprobante(comprobante)">
+                          <i class="bi bi-trash-fill" style="font-size: 1.5rem"></i>
+                        </button>
+                      </td>
+                  </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </fieldset>
+
+        <p-fieldset class="form-group scheduler-border" >
+          <legend class="scheduler-border">Datos de la declaraci&oacute;n de Importaci&oacute;n</legend>
+          <div class="row">
+            <p-table [value]="damSeriesDpmn" [paginator]="damSeriesDpmn!.length > 0" [rows]="10"
+              [showCurrentPageReport]="damSeriesDpmn!.length > 0"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+              [rowHover]="true"
+              styleClass="p-datatable-sm" [rowsPerPageOptions]="[10,25,50]">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th style="width: 5%">&Iacute;tem</th>
+                      <th style="width: 10%">DAM/DSI</th>
+                      <th style="width: 5%">Serie</th>
+                      <th style="width: 10%">Subpartida</th>
+                      <th style="width: 15%">Descripci&oacute;n Comercial</th>
+                      <th style="width: 8%" class="text-end">Peso Bruto</th>
+                      <th style="width: 8%" class="text-end">Peso Neto</th>
+                      <th style="width: 8%" class="text-end">Cantidad declarada (UF)</th>
+                      <th style="width: 5%" class="text-end">Sec. Desc.</th>
+                      <th style="width: 8%" class="text-end">Cantidad retirada (UF)</th>
+                      <th style="width: 8%" class="text-end">Saldo</th>
+                      <th style="width: 5%" class="text-end">Unidad F&iacute;sica</th>
+                      <th style="width: 5%">Acci&oacute;n</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr >
+                  <td colspan = "10" class="text-center">No hay registros</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-seriedpm let-rowIndex="rowIndex">
+                  <tr>
+                      <td>{{rowIndex + 1}}</td>
+                      <td>{{seriedpm.aduanaDam.codDatacat}}-{{seriedpm.regimenDam.codDatacat}}-{{seriedpm.annDam}}-{{seriedpm.numDam | number:'6.0-0' | quitarComma }}</td>
+                      <td>{{seriedpm.numSerie}}</td>
+                      <td>{{seriedpm.codSubPartida}}</td>
+                      <td>{{seriedpm.desComercial | saltoLinea}}</td>
+                      <td class="text-end">{{seriedpm.mtoPesoBruto}}</td>
+                      <td class="text-end">{{seriedpm.mtoPesoNeto}}</td>
+                      <td class="text-end">{{seriedpm.cntUnidadFisica}}</td>
+                      <td class="text-end">{{seriedpm.numSecDescarga}}</td>
+                      <td class="text-end">{{seriedpm.cntRetirada | number:'.3-3' | quitarComma}}</td>
+                      <td class="text-end">{{seriedpm.cntSaldo | number:'.3-3' | quitarComma}}</td>
+                      <td class="text-end">{{seriedpm.unidadFisica.codDatacat}}</td>
+                      <td>
+                        <button type="button" class="btn btn-link" (click)="editarSerieCcmn(seriedpm)">
+                          <i class="bi bi-pencil-square" style="font-size: 2rem" ></i>
+                        </button>
+                        <button type="button" class="btn btn-link" (click)="eliminarSerie(seriedpm)">
+                          <i class="bi bi-trash-fill" style="font-size: 1.5rem"></i>
+                        </button>
+                      </td>
+                  </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-fieldset>
+
+        <div class="row top-buffer justify-content-center">
+          <div class="col-4">
+            <button type="button" id="btnAddDeclaracion" class="btn btn-primary btn-sm btn-block"
+                    (click)="irPageAddDeclaracion()">
+              Agregar Declaraci&oacute;n de Importaci&oacute;n y Comprobante de Pago
+            </button>
+          </div>
+        </div>
+
+        <div class="row top-buffer justify-content-between">
+          <div class="col-2">
+            <button type="button" id="btnAnterior" (click)="irPaginaAnterior()"
+              class="btn btn-outline-success btn-lg btn-block">
+              <i class="bi bi-arrow-left-circle-fill"></i>
+              &nbsp; Retroceder
+            </button>
+          </div>
+          <div class="col-2">
+            <button type="button" id="btnSiguiente" class="btn btn-success btn-lg btn-block"
+            (click) = "irPaginaSiguiente()" >
+              Siguiente &nbsp;
+              <i class="bi bi-arrow-right-circle-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+</form>
+
+
+  <div class="card border-primary"  *ngIf="tipoBusqueda=='3'">
+     <form  id="datosComprobanteForm" name="datosComprobanteForm" [formGroup]="datosComprobanteForm"  *ngIf="datosComprobanteForm" name="datosComprobanteForm">
+        <div class="card-header bg-primary" style="background-color: #4683df;" >
+          <div class="p-2 flex-grow-1 bd-highlight " style="color: white; font-weight:bold" >Rectificar comprobante de pago / Carta Porte  - CCMN </div>
+        </div>
+
+        <fieldset class="form-group scheduler-border">
+          <legend class="scheduler-border">Datos del comprobante Pago/CartaPorte </legend>
+            <!--Row 1-->
+              <div class="row">
+                  <div class="col-2">
+                    <label for="txtTipoComprobante">Tipo de comprobante:</label>
+                  </div>
+                  <div class="col-2">
+                    <p-dropdown inputId="codTipoComprobante" [options]="lstTipoComprobante"  formControlName="codTipoComprobante" placeholder="Seleccionar"
+                    optionLabel="descripcion" (onChange)="onChangeTipoComprob()" optionValue="codigo" [style]="{'width':'100%'}"></p-dropdown>
+                  </div>
+                  <div class="col-2">
+                    <input type="text" class="form-control" id="numSerieComprobante" name="numSerieComprobante" placeholder="Numero Serie"
+                      formControlName="numSerieComprobante">
+                  </div>
+                  <div class="col-3">
+                    <input type="text" class="form-control" id="numeroComprobante" name="numeroComprobante" placeholder="Número"
+                      formControlName="numeroComprobante" (blur)="onChangeguiaRemision()" >
+                  </div>
+                   <div class="col-3">
+                    <input type="text" class="form-control" id="numeroRucRemitente" name="numeroRucRemitente" placeholder="Número RUC Remitente"
+                      formControlName="numeroRucRemitente" (blur)="buscarRUC('1')" maxlength="11" >
+                  </div>
+              </div>
+              <!--Row 2-->
+              <br>
+              <div class="row">
+                <div class="col-2">
+                  <label for="txtPaisPlaca">Motivo del traslado::</label>
+                </div>
+                <div class="col-2">
+                  <p-dropdown inputId="codMotivoTraslado" [options]="lstMotivoTraslado"  formControlName="codMotivoTraslado" placeholder="Seleccionar"
+                  optionLabel="descripcion" optionValue="codigo" [style]="{'width':'100%'}"></p-dropdown>
+                </div>
+                <div class="col-8">
+                  <input type="text" class="form-control" id="razonSocialRemitenteComprobante" name="razonSocialRemitenteComprobante"
+                    formControlName="razonSocialRemitenteComprobante" placeholder="Razón Social" readonly >
+                </div>
+              </div>
+              <!--Row 3-->
+              <br>
+              <div class="row">
+                <div class="col-2">
+                  <label for="txtPaisPlaca">RUC del destinatario::</label>
+                </div>
+                <div class="col-2">
+                  <input type="text" class="form-control" id="numeroRucDestinatario" name="numeroRucDestinatario" placeholder="Número RUC Destinatario"
+                    formControlName="numeroRucDestinatario"  >
+                </div>
+                <div class="col-8">
+                  <input type="text" class="form-control" id="razonSocialDestinatarioComprobante" name="razonSocialDestinatarioComprobante"
+                    formControlName="razonSocialDestinatarioComprobante"   placeholder="Razón Social Destinatario" readonly >
+                </div>
+              </div>
+                <!--Row 4-->
+              <br>
+              <div class="row">
+                <div class="col-2">
+                  <label for="txtPaisPlaca">Destino:</label>
+                </div>
+                <div class="col-4">
+
+                    <p-autoComplete
+                      [(ngModel)]="ubigeoSeleccionadoEdit" name="selectUbigeo"
+                      [suggestions]="ubigeosFiltrados"
+                      [inputStyleClass]="ubigeoSeleccionadoEdit == null ? 'ng-invalid ng-dirty' : ''"
+                      [ngClass]="{'is-invalid': ubigeoSeleccionadoEdit == null}"
+                      (completeMethod)="filtrarUbigeo($event)"
+                      [forceSelection]="true"
+                      [styleClass]="'autocompletarConDropDown'"
+                      field="desDataCat"
+                      formControlName="ubigeo"
+                      [dropdown]="true"
+                      (onSelect)="validarUbigeo(ubigeoSeleccionadoEdit)">
+                      <ng-template let-ubigeo pTemplate="item">
+                        <div class="ubigeo-item">
+                          <div>{{ubigeo.desDataCat}}</div>
+                        </div>
+                      </ng-template>
+                    </p-autoComplete>
+                    <div
+                        *ngIf="ubigeoSeleccionadoEdit == null"
+                        class="invalid-feedback">
+                        Debe ingresar el origen
+                    </div>
+                  </div>
+                  <br>
+
+              </div>
+              <br>
+              <div class="row justify-content-around">
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                  <button type="button"  class="btn btn-primary" (click)="cancelarirPaginacomprobantes()">
+                    Cancelar
+                  </button>
+                  <!-- <button type="button" routerLink="./" class="btn btn-primary">Cancelar</button> -->
+                </div>
+                <div class="col-2">
+                <button type="button" class="btn btn-primary" (click)="aceptarComprobantes()" [disabled]="esDeshabilitado">Aceptar</button>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-2">
+                </div>
+              </div>
+
+        </fieldset>
+
+      </form>
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" [acceptLabel] = "'Si'" [rejectLabel] = "'No'" ></p-confirmDialog>
+   <!-- <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" [acceptLabel] = "'Si'" [rejectLabel] = "'No'" ></p-confirmDialog> -->
+   <p-dialog header="Mensaje" [(visible)]="display">
+    Se restaurarán los saldos asociados a las series de las DAM eliminadas.
+   </p-dialog>
+   <p-toast position="top-right" key="msj"></p-toast>

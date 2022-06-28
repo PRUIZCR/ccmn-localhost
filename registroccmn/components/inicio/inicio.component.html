@@ -1,0 +1,163 @@
+<div class="container-fluid">
+  <div class="row p-2">
+      <div class="col">
+          <div class="card">
+              <div class="row">
+                  <div class="col">
+                      <div class="card-header text-white text-center bg-primary">
+                          <strong>Confirmaci&oacute;n / Registro CCMN</strong>
+                      </div>
+                  </div>
+              </div>
+
+              <br>
+              <form [formGroup]="inicioForm" id="frmInicio" name="frmInicio">
+                <div class="row">
+                  <div class="col">
+                    <fieldset class="form-group scheduler-border" >
+                      <div class="row">
+                        <div class="col-4">
+                          <p-radioButton (onClick)="onRadioChange()" name="tipoSeleccion" value="1" formControlName="tipoSeleccion"  label="PCI - Puesto de Control Intermedio"></p-radioButton>
+                        </div>
+                        <div class="col-4">
+                          <p-radioButton (onClick)="onRadioChange()" name="tipoSeleccion" value="2" formControlName="tipoSeleccion"  label="CAF - Centro de Atenci&oacute;n Fronteriza"></p-radioButton>
+                        </div>
+                        <div class="col-4">
+                          <p-radioButton (onClick)="onRadioChange()" name="tipoSeleccion" value="3" formControlName="tipoSeleccion"  label="Terminal Terrestre / Aeropuerto"></p-radioButton>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <p-table #dt [value]="lstPciDetalle"
+                      responsiveLayout="scroll"
+                      dataKey="id"
+                      [rows]="10"
+                      [paginator]="true"
+                      [showCurrentPageReport]="true"
+                      [rowsPerPageOptions]="[5,10,15,20]"
+                      [loading]="loading"
+                      styleClass="p-datatable-sm"
+                      [paginator]="true"
+                      [lazy]="false"
+                      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                      [globalFilterFields]="['controlPaso']" >
+
+
+
+                      <ng-template pTemplate="caption">
+                        <div class= "container-caption">
+                          Controles de paso en proceso para confirmaci&oacute;n / registro CCMN
+                        </div>
+                        <div class="p-d-flex">
+                          <span class="p-input-icon-left p-ml-auto">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" maxlength="21"
+                                    (input)="dt.filterGlobal($any($event.target ).value, 'contains')" style="width:auto" placeholder="Filtro por Control de Paso" />
+                                </span>
+                        </div>
+                      </ng-template>
+
+                          <ng-template pTemplate="header" >
+                              <tr>
+                                  <th style="width:3%">&Iacute;tem</th>
+                                  <th pSortableColumn="numPci">N° de Control de paso<p-sortIcon field="numPci"></p-sortIcon></th>
+                                  <th pSortableColumn="motivoViaje.desDataCat">Motivo de viaje<p-sortIcon field="motivoViaje.desDataCat"></p-sortIcon></th>
+                                  <th pSortableColumn="numDocumento">N° de documento asociado<p-sortIcon field="numDocumento"></p-sortIcon></th>
+                                  <th pSortableColumn="paisPlaca.codDatacat">Pa&iacute;s placa<p-sortIcon field="paisPlaca.codDatacat"></p-sortIcon></th>
+                                  <th pSortableColumn="nomPlaca">Placa<p-sortIcon field="nomPlaca"></p-sortIcon></th>
+                                  <th pSortableColumn="nomPlacaCarreta">Placa carreta<p-sortIcon field="nomPlacaCarreta"></p-sortIcon></th>
+                                  <th pSortableColumn="flujoVehiculo.desDataCat">Flujo de veh&iacute;culo<p-sortIcon field="flujoVehiculo.desDataCat"></p-sortIcon></th>
+                                  <th pSortableColumn="tipoControl.desDataCat">Tipo control<p-sortIcon field="tipoControl.desDataCat"></p-sortIcon></th>
+                                  <th pSortableColumn="fecInicioControl">Fecha de inicio<p-sortIcon field="fecInicioControl"></p-sortIcon></th>
+                                  <th pSortableColumn="tiempoTranscurrido">Tiempo (horas)<p-sortIcon field="tiempoTranscurrido"></p-sortIcon></th>
+                                  <th pSortableColumn="nomFuncionario">Funcionario Aduanero<p-sortIcon field="nomFuncionario"></p-sortIcon></th>
+                              </tr>
+                          </ng-template>
+
+                          <ng-template pTemplate="body" let-lstPciDetalle let-rowIndex="rowIndex" >
+
+                              <tr>
+                                  <td>{{rowIndex + 1}}</td>
+                                  <td>
+                                      <p-button label="{{lstPciDetalle.aduana.codDatacat}}-{{lstPciDetalle.puestoControl.codDatacat}}-{{lstPciDetalle.annPci}}-{{lstPciDetalle.numPci | number:'10.0' | quitarComma}}" styleClass="p-button-link" (click)="onLoadServer(lstPciDetalle)"></p-button>
+                                  </td>
+                                  <td>{{lstPciDetalle.motivoViaje?.desDataCat}}</td>
+                                  <td>
+                                    <div *ngIf="lstPciDetalle.motivoViaje?.desDataCat=='DPMN'">
+                                      {{lstPciDetalle.aduanaDocumento?.codDatacat}}-{{lstPciDetalle.annDocumento}}-{{lstPciDetalle.numDocumento}}
+                                    </div>
+                                  </td>
+                                  <td>{{lstPciDetalle?.paisPlaca?.codDatacat}}</td>
+                                  <td>{{lstPciDetalle.nomPlaca}}</td>
+
+
+                                  <td>
+                                    <div *ngIf="lstPciDetalle.flujoVehiculo?.codDatacat=='01' && lstPciDetalle.nomPlacaCarreta!=null ">
+                                      {{lstPciDetalle.paisPlacaCarreta?.codDatacat}}-{{lstPciDetalle.nomPlacaCarreta}}
+                                    </div>
+                                    <div *ngIf="lstPciDetalle.flujoVehiculo?.codDatacat!='01'">
+                                      {{lstPciDetalle.nomPlacaCarreta}}
+                                    </div>
+                                  </td>
+
+                                  <td>
+                                    <app-icon-flujo-vehiculo [codFlujoVehiculo]="lstPciDetalle.flujoVehiculo?.codDatacat" >
+                                    </app-icon-flujo-vehiculo>
+                                  </td>
+
+                                  <td>
+                                    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="getColorControl(lstPciDetalle) != null" width="32" height="32"
+                                              [attr.fill]="getColorControl(lstPciDetalle)" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                      <circle cx="8" cy="8" r="8"/>
+                                    </svg>
+                                  </td>
+                                  <td>{{lstPciDetalle.fecInicioControl}}</td>
+                                  <td>{{lstPciDetalle.tiempoTranscurrido}}</td>
+                                  <td>{{lstPciDetalle.codFuncionario}} - {{lstPciDetalle.nomFuncionario}}</td>
+                              </tr>
+
+
+                          </ng-template>
+
+                          <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td colspan="4" class="text-center" text-align="center">No hay Registros</td>
+                            </tr>
+                          </ng-template>
+                    </p-table>
+
+                  </div>
+                </div>
+
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <p-dialog [(visible)]="mostrarSaldoInsuficiente" [modal]="true" [closable]="true" [style]="{width: '25vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <div class="text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
+      class="bi bi-info-circle-fill text-info" viewBox="0 0 16 16">
+      <path
+        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </svg>
+  </div>
+  <div class="text-center top-buffer">
+    <p class="font-weight-bolder text-info" [innerHTML]="msjSaldoInsuficiente">
+    </p>
+  </div>
+
+  <div class="text-center top-buffer">
+    <button type="button" id="btnCerrar" class="btn btn-danger" (click)="btnSalir()">Aceptar</button>
+  </div>
+</p-dialog>
+
+</div>
+
+
+

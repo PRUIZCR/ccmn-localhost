@@ -1,0 +1,376 @@
+<form [formGroup]="datosTransporteForm" id="frmDatosTransporte" name="frmDatosTransporte">
+  <fieldset class="form-group scheduler-border" formGroupName="lugarDescarga">
+    <legend class="scheduler-border">Datos de la Aduana/Lugar de control</legend>
+    <div class="row">
+      <div class="col-2">
+        <label for="selAduanaDescarga">Aduana de descarga:</label>
+      </div>
+      <div class="col-4">
+        <select id="selAduanaDescarga" name="selAduanaDescarga" class="form-control form-select"
+          [ngClass]="{'is-invalid': aduanaDescarga.errors?.required}" aria-describedby="validationAduanaDescarga"
+          formControlName="aduana">
+          <option *ngFor="let aduana of catalogoAduanasDescarga" [value]="aduana.codDatacat">
+            {{aduana.codDatacat + " - " + aduana.desDataCat}}
+          </option>
+        </select>
+        <div id="validationAduanaDescarga" *ngIf="aduanaDescarga.errors?.required" class="invalid-feedback">
+          Debe seleccionar una aduana de descarga
+        </div>
+      </div>
+      <div class="col-2">
+        <label for="selPuestoControl">Puesto de Control:</label>
+      </div>
+      <div class="col-4">
+        <select id="selPuestoControl" name="selPuestoControl" class="form-control form-select"
+          [ngClass]="{'is-invalid': puestoControl.errors?.required}" formControlName="puestoControl">
+          <option *ngFor="let optPuestoControl of rptaPuestoControl?.data" [value]="optPuestoControl.codigo">
+            {{optPuestoControl.codigo + " - " + optPuestoControl.descripcion}}
+          </option>
+        </select>
+        <div *ngIf="puestoControl.errors?.required" class="invalid-feedback">
+          Debe seleccionar un puesto de control
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset  class="form-group scheduler-border" formGroupName="empresaTransporte">
+    <legend class="scheduler-border" *ngIf="tipoRegistro!=estado.PARTICULAR">Datos de la Empresa de Transporte</legend>
+    <legend class="scheduler-border" *ngIf="tipoRegistro==estado.PARTICULAR">Datos del viaje</legend>
+    <div class="row" *ngIf="tipoRegistro!=estado.PARTICULAR">
+      <div class="col-2">
+        <label for="selTipoNacionalidad">Tipo Nacionalidad:</label>
+      </div>
+      <div class="col-4">
+        <select id="selTipoNacionalidad" name="selTipoNacionalidad" class="form-control form-select"
+          [ngClass]="{'is-invalid': tipoNacEmpTrans.errors?.required}" formControlName="tipoNacionalidad">
+          <option *ngFor="let tipoNacionalidad of catalogoTiposNacionalidad" [value]="tipoNacionalidad.codDatacat">
+            {{tipoNacionalidad.desDataCat}}
+          </option>
+        </select>
+        <div *ngIf="tipoNacEmpTrans.errors?.required" class="invalid-feedback">
+          Debe seleccionar tipo de nacionalidad
+        </div>
+      </div>
+      <div class="col-2">
+        <label for="txtIdentificacion">{{descIdentificacion}}:</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="txtIdentificacion" name="txtIdentificacion"
+          [ngClass]="{'is-invalid': identificacionEmpTrans.errors?.required}"
+          (blur)="validarIdentificacion(this.identificacionEmpTrans.value)" formControlName="identificacion"
+          [maxlength]="maxlengthNumIdentificacion">
+        <div *ngIf="identificacionEmpTrans.errors?.required" class="invalid-feedback">
+          {{descErrorIdentificacionEmpTrans}}
+        </div>
+      </div>
+    </div>
+    <div class="row top-buffer" *ngIf="tipoRegistro!=estado.PARTICULAR">
+      <div class="col-2">
+        <label for="selPaisEmpresa">Pa&iacute;s Empresa:</label>
+      </div>
+      <div class="col-4">
+        <select id="selPaisEmpresa" name="selPaisEmpresa" [ngClass]="{'is-invalid': paisEmpTrans.errors?.required}"
+          class="form-control form-select" formControlName="pais">
+          <option value="">&nbsp;</option>
+          <option *ngFor="let pais of catalogoPaisesEmpNac" [value]="pais.codDatacat">
+            {{pais.desDataCat}}
+          </option>
+        </select>
+        <div *ngIf="paisEmpTrans.errors?.required" class="invalid-feedback">
+          Debe ingresar el pa&iacute;s empresa
+        </div>
+      </div>
+      <div class="col-6">
+        <input type="text" class="form-control" id="txtNombreEmpresa" [readonly]="true"
+          [ngClass]="{'is-invalid': nombreEmpTrans.errors?.required}" name="txtNombreEmpresa" formControlName="nombre">
+        <div *ngIf="nombreEmpTrans.errors?.required" class="invalid-feedback">
+          {{descErrorNombreEmpresa}}
+        </div>
+      </div>
+    </div>
+    <div class="row top-buffer">
+      <div class="col-2">
+        <label for="txtFlujoVehiculo">Flujo de veh&iacute;culo:</label>
+      </div>
+      <div class="col-2">
+        <select id="selFlujoVehiculo" name="selFlujoVehiculo" class="form-control form-select"
+          [ngClass]="{'is-invalid': flujoVehiculoEmpTrans.errors?.required}" formControlName="flujoVehiculo">
+          <ng-container *ngFor="let flujo of catalogoFlujoVehiculo">
+            <ng-container *ngIf="tipoRegistro!=estado.TTA || (tipoRegistro==estado.TTA && flujo.codDatacat != '01')">
+              <option [value]="flujo.codDatacat">
+                {{flujo.desDataCat}}
+              </option>
+            </ng-container>
+          </ng-container>
+        </select>
+        <div *ngIf="flujoVehiculoEmpTrans.errors?.required" class="invalid-feedback">
+          Debe seleccionar el flujo del veh&iacute;culo
+        </div>
+      </div>
+
+      <div class="col-1 offset-md-2">
+        <label for="selPaisPlaca">Pa&iacute;s placa:</label>
+      </div>
+      <div class="col-2">
+        <select id="selPaisPlaca" name="selPaisPlaca" class="form-control form-select"
+          [ngClass]="{'is-invalid': paisPlacaEmpTrans.errors?.required}" formControlName="paisPlaca">
+          <option value="">&nbsp;</option>
+          <option *ngFor="let pais of catalogoPaisesEmpNac" [value]="pais.codDatacat">
+            {{pais.desDataCat}}
+          </option>
+        </select>
+        <div *ngIf="paisPlacaEmpTrans.errors?.required" class="invalid-feedback">
+          Debe ingresar el pa&iacute;s placa
+        </div>
+      </div>
+      <div class="col-1">
+        <label for="txtPlaca">Placa:</label>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" id="txtPlaca" name="txtPlaca" pKeyFilter="alphanum"
+          [ngClass]="{'is-invalid': placaEmpTrans.invalid}" maxlength="8" formControlName="placa"
+          (blur)="onBlurValidarPlacaEmpTrans()">
+        <div *ngIf="placaEmpTrans.invalid" class="invalid-feedback">
+          Ingrese letras may&uacute;sculas y/o n&uacute;meros para la placa
+        </div>
+      </div>
+    </div>
+
+    <div class="row top-buffer" *ngIf="tipoRegistro!=estado.PARTICULAR && tipoRegistro!=estado.TTA && tipoRegistro!=estado.BUS">
+      <div class="col-2">
+        <label for="txtCorreoTransportista">Correo electr&oacute;nico:</label>
+      </div>
+      <div class="col-4">
+        <input type="email" class="form-control" maxlength="50" [ngClass]="{'is-invalid': emailEmpTrans.invalid}"
+          id="txtCorreoTransportista" name="txtCorreoTransportista" aria-describedby="validationEmailFeedback"
+          formControlName="email">
+        <div id="validationEmailFeedback" *ngIf="emailEmpTrans.invalid" class="invalid-feedback">
+          Ingrese un correo v&aacute;lido
+        </div>
+      </div>
+      <div class="col-1">
+        <label for="selPaisPlacaCarreta">Pa&iacute;s Placa carreta:</label>
+      </div>
+      <div class="col-2">
+        <select id="selPaisPlacaCarreta" name="selPaisPlacaCarreta" class="form-control form-select"
+          formControlName="paisPlacaCarreta">
+          <option value="">&nbsp;</option>
+          <option *ngFor="let pais of catalogoPaises" [value]="pais.codDatacat">
+            {{pais.desDataCat}}
+          </option>
+        </select>
+      </div>
+      <div class="col-1">
+        <label for="txtPlacaCarreta">Placa carreta:</label>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" id="txtPlacaCarreta" name="txtPlacaCarreta" pKeyFilter="alphanum"
+          [ngClass]="{'is-invalid': placaCarretaEmpTrans.invalid}" maxlength="8" formControlName="placaCarreta">
+        <div *ngIf="placaCarretaEmpTrans.invalid" class="invalid-feedback">
+          Ingrese letras may&uacute;sculas y/o n&uacute;meros para la placa
+        </div>
+      </div>
+    </div>
+
+    <div class="row top-buffer" *ngIf="tipoRegistro!=estado.PARTICULAR && tipoRegistro!=estado.TTA && tipoRegistro!=estado.BUS">
+      <div class="col-2">
+        <label for="txtNumTelefTransportista">N&uacute;mero Telef&oacute;nico:</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="txtNumTelefTransportista" maxlength="13"
+          [ngClass]="{'is-invalid': telefonoEmpTrans.invalid}" pKeyFilter="pint" name="txtNumTelefTransportista"
+          formControlName="telefono">
+        <div *ngIf="telefonoEmpTrans.invalid" class="invalid-feedback">
+          Ingrese un n&uacute;mero telef&oacute;nico v&aacute;lido
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-group scheduler-border" formGroupName="conductor"
+    *ngIf="tipoRegistro!=estado.PARTICULAR && tipoRegistro!=estado.TTA">
+    <legend class="scheduler-border">Datos del Conductor</legend>
+    <div class="row">
+      <div class="col-2">
+        <label for="selNacionalidadConductor">Nacionalidad:</label>
+      </div>
+      <div class="col-4">
+        <select id="selNacionalidadConductor" name="selNacionalidadConductor" class="form-control form-select"
+          [ngClass]="{'is-invalid': nacionalidadConductor.errors?.required}" formControlName="nacionalidad">
+          <option value="">&nbsp;</option>
+          <option *ngFor="let pais of catalogoPaisesEmpNac" [value]="pais.codDatacat">
+            {{pais.desDataCat}}
+          </option>
+        </select>
+        <div *ngIf="nacionalidadConductor.errors?.required" class="invalid-feedback">
+          Debe ingresar la nacionalidad
+        </div>
+      </div>
+      <div class="col-2">
+        <label for="selTipoIdenConductor">Tipo de documento de identidad:</label>
+      </div>
+      <div class="col-2">
+        <select id="selTipoIdenConductor" name="selTipoIdenConductor" class="form-control form-select"
+          formControlName="tipoDocIdentidad">
+          <ng-container *ngFor="let tipoDoc of catalogoTiposDocIdentidad">
+            <ng-container *ngIf="tipoDoc.codDatacat!='4'">
+              <option value="{{tipoDoc.codDatacat}}">{{tipoDoc.desDataCat}}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" id="txtNumDocConductor"
+          [ngClass]="{'is-invalid': numDocIdenConductor.invalid}" name="txtNumDocConductor"
+          formControlName="numDocIdentidad" [maxlength]="maxlengthNumDocConductor">
+        <div *ngIf="numDocIdenConductor.invalid" class="invalid-feedback">
+          Ingrese el documento de identidad
+        </div>
+      </div>
+    </div>
+
+    <div class="row top-buffer">
+      <div class="col-2">
+        <label for="txtNombreConductor">Nombre Conductor:</label>
+      </div>
+      <div class="col-3">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="txtNombreConductor"
+          name="txtNombreConductor" maxlength="50" [ngClass]="{'is-invalid': nombreConductor.invalid}"
+          placeholder="nombres" formControlName="nombre" [readonly]="esDniConductor">
+        <div *ngIf="nombreConductor.invalid" class="invalid-feedback">
+          Debe ingresar el nombre
+        </div>
+      </div>
+      <div class="col-3">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control"
+          id="txtApellidosConductor" name="txtApellidosConductor" [ngClass]="{'is-invalid': apellidoConductor.invalid}"
+          maxlength="50" placeholder="apellidos" formControlName="apellido" [readonly]="esDniConductor">
+        <div *ngIf="apellidoConductor.invalid" class="invalid-feedback">
+          Debe ingresar el apellido
+        </div>
+      </div>
+      <div class="col-2">
+        <label for="txtNumeroLicencia">N&uacute;mero de Licencia:</label>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" id="txtNumeroLicencia"
+          [ngClass]="{'is-invalid': licenciaConductor.invalid}" pKeyFilter="alphanum" name="txtNumeroLicencia"
+          maxlength="11" formControlName="licencia">
+        <div *ngIf="licenciaConductor.invalid" class="invalid-feedback">
+          Ingrese letras may&uacute;sculas y/o n&uacute;meros para licencia
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+
+  <fieldset class="form-group scheduler-border" formGroupName="responsable" *ngIf="mostrarResponsable">
+    <legend class="scheduler-border">Datos del Responsable</legend>
+    <div class="row">
+      <div class="col-2">
+        <label for="selTipoIdenResponsable">Identificaci&oacute;n:</label>
+      </div>
+
+      <div class="col-2">
+        <select id="selTipoIdenResponsable" name="selTipoIdenResponsable" class="form-control form-select"
+          formControlName="tipoDocIdentidadRes">
+          <ng-container *ngFor="let tipoDoc of catalogoTiposDocIdentidad">
+            <ng-container *ngIf="tipoDoc.codDatacat!='4'">
+              <option value="{{tipoDoc.codDatacat}}">{{tipoDoc.desDataCat}}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="col-2">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control"
+          id="txtNumDocResponsable" [ngClass]="{'is-invalid': numDocIdenResponsable.invalid}"
+          name="txtNumDocResponsable" formControlName="numDocIdentidadRes" [maxlength]="maxlengthNumDocResponsable">
+        <div *ngIf="numDocIdenResponsable.invalid" class="invalid-feedback">
+          Ingrese el documento de identidad
+        </div>
+      </div>
+
+      <div class="col-3">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control"
+          id="txtNombreResponsable" name="txtNombreResponsable" maxlength="50"
+          [ngClass]="{'is-invalid': nombreResponsable.invalid}" placeholder="nombres" formControlName="nombreRes"
+          [readonly]="esDniResponsable">
+        <div *ngIf="nombreResponsable.invalid" class="invalid-feedback">
+          Debe ingresar el nombre
+        </div>
+      </div>
+
+      <div class="col-3">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control"
+          id="txtApellidoResponsable" name="txtApellidoResponsable" maxlength="50"
+          [ngClass]="{'is-invalid': apellidoResponsable.invalid}" placeholder="apellidos" formControlName="apellidoRes"
+          [readonly]="esDniResponsable">
+        <div *ngIf="apellidoResponsable.invalid" class="invalid-feedback">
+          Debe ingresar los apellidos
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row top-buffer">
+      <div class="col-2">
+        <label for="txtCorreoResponsable">Correo electr&oacute;nico:</label>
+      </div>
+      <div class="col-4">
+        <input type="email" class="form-control" maxlength="50" [ngClass]="{'is-invalid': emailResponsable.invalid}"
+          id="txtCorreoResponsable" name="txtCorreoResponsable" aria-describedby="validationEmailFeedback"
+          formControlName="emailRes">
+        <div id="validationEmailFeedback" *ngIf="emailResponsable.invalid" class="invalid-feedback">
+          Ingrese un correo v&aacute;lido
+        </div>
+      </div>
+
+      <div class="col-2">
+        <label for="txtNumTelefResponsable">N&uacute;mero Telef&oacute;nico:</label>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control" id="txtNumTelefResponsable" maxlength="13"
+          [ngClass]="{'is-invalid': telefonoResponsable.invalid}" pKeyFilter="pint" name="txtNumTelefResponsable"
+          formControlName="telefonoRes">
+        <div *ngIf="telefonoResponsable.invalid" class="invalid-feedback">
+          Ingrese un n&uacute;mero telef&oacute;nico v&aacute;lido
+        </div>
+      </div>
+
+    </div>
+  </fieldset>
+
+
+  <div class="row top-buffer justify-content-between">
+    <div class="col">
+      <button type="button" id="btnSiguiente" class="btn btn-outline-success btn-lg btn-block"
+        (click)="regresarBandeja()">
+        Cancelar &nbsp;
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="col-2">
+      <button type="button" id="btnSiguiente" (click)="irPaginaSiguiente()" class="btn btn-success btn-lg btn-block">
+        Siguiente &nbsp;
+        <i class="bi bi-arrow-right-circle-fill"></i>
+      </button>
+    </div>
+  </div>
+</form>
+<p-toast></p-toast>
+<p-dialog [(visible)]="mostrarDlgRucNoValido" [modal]="true" [closable]="false" [style]="{width: '25vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <div class="text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
+      class="bi bi-info-circle-fill text-info" viewBox="0 0 16 16">
+      <path
+        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </svg>
+  </div>
+  <div class="text-center top-buffer">
+    <span class="font-weight-bolder text-info">RUC no se encuentra activo y/o tiene condici&oacute;n de No habido o no
+      hallado</span>
+  </div>
+</p-dialog>

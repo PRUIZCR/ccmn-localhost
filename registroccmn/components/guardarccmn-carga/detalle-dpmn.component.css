@@ -1,0 +1,43 @@
+
+
+  a {
+    display: block;
+    text-decoration: none;
+    padding: 10px;
+    transition-duration: 0.3s;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .active {
+    text-align: justify;
+    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    background-color: yellow;
+  }
+
+  .cabecera{
+    border-radius: 5px 5px 0 0;
+    font-size: 1.6rem;
+    padding: 8px 16px;
+    background-color: #1e88e5;
+    color: #fafafa;
+    border-radius: 5px;
+    margin: 16px auto;
+  }
+
+
+
+label {
+  display: block;
+  color: black;
+  font-weight: bold;
+  font-size: small;
+}
+
+.botones {
+  margin: 0 auto;
+  text-align:center;
+}

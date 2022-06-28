@@ -1,0 +1,64 @@
+
+  <div class="card border-primary mb-3" style="max-width: 100%;">
+  <div class="card-header bg-primary" style="background-color: #4683df;">
+    <div class="p-2 flex-grow-1 bd-highlight " style="color: white; font-weight:bold" >Registro de CCMN - Particulares</div>
+  </div>
+  
+  <div [formGroup]="datosConfirmarDpmn" id="frmDatosConfirmarDpmn" name="frmDatosConfirmarDpmn">
+
+    <div class="container-fluid">
+      <div class="card border-primary">
+        <div class="card-body"> 
+          <div class="row form-inline">
+
+            <div class="col-1">
+              <label class="col-form-label" for="txtNumPlaca">Placa:</label>
+            </div>
+    
+            <div class="col-1">
+              <input id = "txtPaisPlaca" name="txtPaisPlaca" type="text" class="form-control"  formControlName="paisPlaca" >  
+            </div>
+            <div class="col-1">
+              <input id = "txtNumPlaca" name="txtNumPlaca" type="text" class="form-control"  formControlName="numPlaca" >  
+            </div>
+    
+            <div class="col-1">
+              <label class="col-form-label" for="txtControl">Control:</label>
+            </div>
+            <div class="col-2">
+              <input id = "txtControl" name="txtControl" type="text" class="form-control"  formControlName="canalControl" >  
+            </div>
+            <div class="col-1">
+              <svg xmlns="http://www.w3.org/2000/svg" *ngIf="getColorControl(pciDetalle) != null" width="32"
+                height="32" [attr.fill]="getColorControl(pciDetalle)" class="bi bi-circle-fill"
+                viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="8" />
+              </svg>
+            </div>
+    
+    
+            <div class="col-3">
+              <label class="col-form-label" for="txtControlPaso">Número de Control de Paso:</label>
+            </div>
+            <div class="col-2">
+              <input id = "txtControlPaso" name="txtControlPaso" type="text" class="form-control"  formControlName="controlPaso" >  
+            </div>
+          </div>        
+        </div>
+      </div>
+      <div>
+        <div class="row top-buffer justify-content-center" >
+          <div class="col-1">
+              <button pButton pRipple type="button" label="Cerrar" (click)="btnSalir();" class="btn btn-primary"></button>
+          </div>
+          <div class="col-2">
+            <button pButton pRipple type="button" label="Registrar CCMN" (click)="continuarRegistroCcmn();"  class="p-button-success"></button>
+          </div>            
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-toast position="top-right" key="msj"></p-toast>
+  
+  </div>  

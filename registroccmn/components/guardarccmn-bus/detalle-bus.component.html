@@ -1,0 +1,250 @@
+<div class="card border-primary mb-3" style="max-width: 100%;">
+
+
+  <div class="card" style="max-width: 100%;">
+    <div class="card-header bg-primary" style="background-color: #4683df;">
+      <div class="p-2 flex-grow-1 bd-highlight " style="color: white; font-weight:bold">Registro de CCMN - Buses</div>
+    </div>
+
+    <div [formGroup]="datosConfirmarDpmn" id="frmDatosConfirmarDpmn" name="frmDatosConfirmarDpmn">
+
+      <div class="container-fluid">
+        <div class="card border-primary">
+          <div class="card-body">
+            <div class="row form-inline">
+
+              <div class="col-1">
+                <label class="col-form-label" for="txtNumPlaca">Placa:</label>
+              </div>
+
+              <div class="col-1">
+                <input id="txtPaisPlaca" name="txtPaisPlaca" type="text" class="form-control"
+                  formControlName="paisPlaca">
+              </div>
+              <div class="col-1">
+                <input id="txtNumPlaca" name="txtNumPlaca" type="text" class="form-control" formControlName="numPlaca">
+              </div>
+
+              <div class="col-1">
+                <label class="col-form-label" for="txtControl">Control:</label>
+              </div>
+              <div class="col-2">
+                <input id="txtControl" name="txtControl" type="text" class="form-control"
+                  formControlName="canalControl">
+              </div>
+              <div class="col-1">
+                <svg xmlns="http://www.w3.org/2000/svg" *ngIf="getColorControl(pciDetalle) != null" width="32"
+                  height="32" [attr.fill]="getColorControl(pciDetalle)" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                  <circle cx="8" cy="8" r="8" />
+                </svg>
+              </div>
+
+
+              <div class="col-3">
+                <label class="col-form-label" for="txtControlPaso">Número de Control de Paso:</label>
+              </div>
+              <div class="col-2">
+                <input id="txtControlPaso" name="txtControlPaso" type="text" class="form-control"
+                  formControlName="controlPaso">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="row top-buffer justify-content-center">
+            <div class="col-1">
+              <button pButton pRipple type="button" label="Cerrar" (click)="btnSalir();"
+                class="btn btn-primary"></button>
+            </div>
+            <div class="col-2">
+              <button pButton pRipple type="button" label="Registrar CCMN" (click)="continuarRegistroCcmn();"
+                class="p-button-success"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <p-toast position="top-right" key="msj"></p-toast>
+
+    <div class="card-body text-primary" style="border-color: #4683df;">
+
+      <p-panel header="Manifiesto de Pasajeros - Buses">
+
+
+        <fieldset class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <p-fieldset>
+                <ng-template pTemplate="header" class="myStyle">Datos de la Empresa de Transporte</ng-template>
+                <div class="row">
+
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Tipo
+                      Nacionalidad:</label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="tipoNacionalidad" disabled>
+
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">País
+                      Empresa:</label>
+                    <div class="col-sm-4 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="paisEmpresa" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm"
+                      class="col-sm-3 col-form-label col-form-label-sm">Identificación:</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="tipoIdentificacion" disabled>
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="desIdentificacion" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Nombre:</label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="nomEmpresa" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Flujo de
+                      Vehículo:</label>
+                    <div class="col-sm-4 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="flujoVehiculo" disabled>
+                    </div>
+                  </div>
+                </div>
+              </p-fieldset>
+            </div>
+
+            <div class="col-md-6">
+              <p-fieldset class="form-group scheduler-border">
+                <ng-template pTemplate="header">Datos del Conductor</ng-template>
+
+                <div class="row">
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Nacionalidad:</label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="nacionalidad" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm"
+                      class="col-sm-3 col-form-label col-form-label-sm">Identificación:</label>
+                    <label for="colFormLabelSm" class="col-sm-6 col-form-label col-form-label-sm">Tipo de
+                      documento:</label>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm" placeholder="CARNET"
+                        [(ngModel)]="tipoDocumentoConductor" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm"> &nbsp;</label>
+                    <label for="colFormLabelSm" class="col-sm-6 col-form-label col-form-label-sm">Num. de
+                      documento:</label>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm" placeholder="CARNET"
+                        [(ngModel)]="numDocIdentidad" disabled>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Nombre
+                      Conductor:</label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="nomConductor" disabled>
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="apeConductor" disabled>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Numero de
+                      Licencia:</label>
+                    <div class="col-sm-9 col-form-label col-form-label-sm">
+                      <input type="text" class="form-control form-control-sm" id="colFormLabelSm"
+                        placeholder="col-form-label-sm" [(ngModel)]="numLicencia" disabled>
+                    </div>
+                  </div>
+                </div>
+              </p-fieldset>
+            </div>
+          </div>
+        </fieldset>
+
+        <br>
+
+        <fieldset class="form-group">
+
+          <p-fieldset>
+            <ng-template pTemplate="header" class="myStyle">Datos Complementarios</ng-template>
+
+            <div class="row top-buffer">
+              <div class="col-2">
+                <label for="txtOrigen">Origen:</label>
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" id="txtOrigen" name="txtOrigen" [(ngModel)]="ubigeoOrigen"
+                  disabled>
+              </div>
+
+              <div class="col-2">
+                <label for="txtDestino">Destino:</label>
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" id="txtDestino" name="txtDestino" [(ngModel)]="ubigeoDestino"
+                  disabled>
+              </div>
+            </div>
+
+            <div class="row top-buffer">
+              <div class="col-2">
+                <label for="txtCantPasaj">Cantidad de Pasajeros:</label>
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" id="txtCantPasaj" name="txtCantPasaj"
+                  [(ngModel)]="cantidadPasajeros" disabled>
+              </div>
+
+              <div class="col-2">
+                <label for="txtFecHorSalBus">Fecha y Hora de Salida del Bus:</label>
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" id="txtFecHorSalBus" name="txtFecHorSalBus"
+                  [(ngModel)]="fechaHoraSalida" disabled>
+              </div>
+            </div>
+
+            <div class="row top-buffer">
+              <div class="col-2">
+                <label for="txtObservacion">Observación:</label>
+              </div>
+              <div class="col-10">
+                <input type="text" class="form-control" id="txtObservacion" name="txtObservacion"
+                  [(ngModel)]="desObservacion" disabled>
+              </div>
+            </div>
+          </p-fieldset>
+        </fieldset>
+      </p-panel>
+    </div>
+  </div>
+</div>

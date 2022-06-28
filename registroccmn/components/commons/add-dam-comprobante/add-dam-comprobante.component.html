@@ -1,0 +1,397 @@
+<div class="card">
+  <div class="card-header">
+    <strong>CCMN - Agregar Declaraci&oacute;n de Importaci&oacute;n y Comprobante de Pago</strong>
+  </div>
+  <div class="card-body">
+    <form id="formValidarDeclaracion" [formGroup]="validarDeclaracionForm" name="formValidarDeclaracion">
+      <div class="row">
+        <div class="col-auto">
+          <span>Declaraci&oacute;n de Importaci&oacute;n</span>
+        </div>
+        <div class="col-auto">
+          <select id="selAduanaDcl" name="selAduanaDcl" class="form-control form-select" aria-describedby="validationAduanaDescarga"
+            formControlName="aduana" placeholder="Aduana" [ngClass]="{'is-invalid': frmCtrlDclAduana.errors?.required}">
+            <option *ngFor="let aduana of catalogoAduanas" [value]="aduana.codDatacat">
+              {{aduana.codDatacat + "-" + aduana.desDataCat}}
+            </option>
+          </select>
+          <div *ngIf="frmCtrlDclAduana.errors?.required" class="invalid-feedback">
+            Debe ingresar aduana
+          </div>
+        </div>
+        <div class="col-1">
+          <input type="text" class="form-control" id="txtAnio" formControlName="annio" pKeyFilter="pint"
+            [ngClass]="{'is-invalid': frmCtrlDclAnio.errors?.required}" placeholder="A&ntilde;o" maxlength="4">
+          <div *ngIf="frmCtrlDclAnio.errors?.required" class="invalid-feedback">
+            Debe ingresar el a&ntilde;o
+          </div>
+        </div>
+        <div class="col-auto">
+          <select id="selRegimen" name="selRegimen" [ngClass]="{'is-invalid': frmCtrlDclRegimen.errors?.required}"
+            class="form-control form-select" formControlName="regimen">
+            <option value="10">10 - Importaci&oacute;n al Consumo</option>
+            <option value="18">18 - Importaci&oacute;n Simplificada</option>
+          </select>
+          <div *ngIf="frmCtrlDclRegimen.errors?.required" class="invalid-feedback">
+            Debe ingresar el regimen
+          </div>
+        </div>
+        <div class="col-1">
+          <input type="text" class="form-control" id="txtNumero" formControlName="numero"
+            [ngClass]="{'is-invalid': frmCtrlDclNumero.errors?.required}" pKeyFilter="pint" maxlength="6">
+          <div *ngIf="frmCtrlDclNumero.errors?.required" class="invalid-feedback">
+            Debe ingresar el n&uacute;mero
+          </div>
+        </div>
+        <div class="col-2">
+          <input type="text" class="form-control" id="txtSeries" formControlName="series" maxlength="20"
+            [ngClass]="{'is-invalid': frmCtrlDclSeries.invalid}" placeholder="Series p.e: 1,2,3-10">
+          <div *ngIf="frmCtrlDclSeries.invalid" class="invalid-feedback">
+            Ingrese un rango correcto de series a buscar. Por ejm.: 1,2,3-10
+          </div>
+        </div>
+        <div class="col-auto">
+          <button type="button" id="btnValidarDeclaracion"
+            [disabled]="rptaDamSeriesDpmn?.estado === estadoValDcl.LOADING" class="btn btn-primary btn-sm"
+            (click)="validarDeclaracion()">
+            <span class="spinner-border spinner-border-sm" *ngIf="rptaDamSeriesDpmn?.estado === estadoValDcl.LOADING"
+              role="status" aria-hidden="true"></span>
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="row top-buffer">&nbsp;</div>
+    <ng-container *ngIf="rptaDamSeriesDpmn?.data">
+      <div class="row" *ngIf="rptaDeclaracion?.estado ===  estado.LOADING">
+        <div class="col alert alert-primary" role="alert">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Cargando informaci&oacute;n de la Declaraci&oacute;n ..
+        </div>
+      </div>
+        <p-accordion [multiple]="true" *ngIf="(rptaDeclaracion?.estado ===  estado.SUCCESS)  && mostrarDatosDAM">
+          <p-accordionTab header="Datos de la DAM/DSI">
+            <div class="row">
+              <div class="col">
+                <div class="row top-buffer">
+                  <div class="col-2">Fecha de Numeraci&oacute;n:</div>
+                  <div class="col-2">
+                    <div class="labelEtiqueta">{{rptaDeclaracion?.data?.fechaNumeracion}}</div>
+                  </div>
+                  <div class="col-1">Canal:</div>
+                  <div class="col-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="colorCanal != null" width="32" height="32"
+                      [attr.fill]="colorCanal" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                      <circle cx="8" cy="8" r="8" />
+                    </svg>
+                    <div *ngIf="colorCanal == null" class="labelEtiqueta">No tiene</div>
+                  </div>
+                  <div class="col-2">Importador:</div>
+                  <div class="col-4">
+                    <div class="labelEtiqueta">
+                      {{rptaDeclaracion?.data?.importador?.docIdentidad?.tipo?.descripcion +
+                      " - " + rptaDeclaracion?.data?.importador?.docIdentidad?.numero +
+                      " - " + rptaDeclaracion?.data?.importador?.nombre }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row top-buffer">
+                  <div class="col-2">Fecha de Levante:</div>
+                  <div class="col-2">
+                    <div class="labelEtiqueta">{{rptaDeclaracion?.data?.fechaLevante}}</div>
+                  </div>
+                  <div class="col-1">Total Series:</div>
+                  <div class="col-1">
+                    <div class="labelEtiqueta">{{cantidadSeries}}</div>
+                  </div>
+                  <div class="col-2">Total Peso Bruto:</div>
+                  <div class="col-1">
+                    <div class="labelEtiqueta">{{rptaDeclaracion?.data?.totalPesoBruto}}</div>
+                  </div>
+                  <div class="col-2">Total Peso Neto:</div>
+                  <div class="col-1">
+                    <div class="labelEtiqueta">{{rptaDeclaracion?.data?.totalPesoNeto}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      <div class="row top-buffer">
+        <div class="col">
+          <fieldset class="form-group scheduler-border">
+            <div class="row justify-content-end">
+              <div class="col-3">
+                <br/>
+                <button type="button" id="btnDescargarSaldo" class="btn btn-success col-12 btn-sm btn-block"
+                  (click)="descargarSaldoTotal()">
+                  <i class="bi bi-arrow-down-square-fill"></i>
+                  &nbsp;Descargar saldo total
+                </button>
+              </div>
+            </div>
+            <div class="row top-buffer">
+              <p-table [value]="rptaDamSeriesDpmn.data" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+                dataKey="numSerie" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                styleClass="p-datatable-sm" [rowHover]="true" [rowsPerPageOptions]="[10,25,50]">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 5%">&Iacute;tem</th>
+                    <th style="width: 15%">DAM/DSI</th>
+                    <th style="width: 5%">Serie</th>
+                    <th style="width: 10%">Subpartida</th>
+                    <th style="width: 15%">Descripci&oacute;n Comercial</th>
+                    <th style="width: 8%" class="text-end">Peso Bruto</th>
+                    <th style="width: 8%" class="text-end">Peso Neto</th>
+                    <th style="width: 8%" class="text-end">Cant. Declarada</th>
+                    <th style="width: 5%" class="text-end">Sec. Desc.</th>
+                    <th style="width: 8%" class="text-end">Saldo</th>
+                    <th style="width: 8%" class="text-end">Cant. a retirar</th>
+                    <th style="width: 5%" class="text-center">Unidad F&iacute;sica</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="10" class="text-center">No hay registros</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-seriedpm let-rowIndex="rowIndex">
+                  <tr>
+                    <td>{{rowIndex + 1}}</td>
+                    <td>
+                      {{seriedpm.aduanaDam.codDatacat}}-{{seriedpm.annDam}}-{{seriedpm.regimenDam.codDatacat}}-{{seriedpm.numDam | number:'6.0-0' | quitarComma}}</td> 
+                    <td>{{seriedpm.numSerie}}</td>
+                    <td>{{seriedpm.codSubPartida}}</td>
+                    <td>{{seriedpm.desComercial | saltoLinea}}</td>
+                    <td class="text-end">{{seriedpm.mtoPesoBruto}}</td>
+                    <td class="text-end">{{seriedpm.mtoPesoNeto}}</td>
+                    <td class="text-end">{{seriedpm.cntUnidadFisica}}</td>
+                    <td class="text-end">{{seriedpm.numSecDescarga}}</td>
+                    <td class="text-end">{{seriedpm.cntSaldo}}</td>
+                    <td class="text-end" pEditableColumn>
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input class="form-control" type="text" [(ngModel)]="seriedpm.cntRetirada"
+                            [pKeyFilter]="'pnum'" maxlength="21" (blur)="validarCantidadRetirada(seriedpm)"
+                            (keydown.enter)="validarCantidadRetirada(seriedpm)">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{seriedpm.cntRetirada | number:'.3-3' | quitarComma}}
+                        </ng-template>
+                      </p-cellEditor>
+                    </td>
+                    <td class="text-center">{{seriedpm.unidadFisica.codDatacat}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </fieldset>
+          <fieldset class="form-group scheduler-border">
+            <legend class="scheduler-border">Datos del comprobante Pago/CartaPorte</legend>
+            <form id="formAddComprobante" [formGroup]="addComprobanteForm" name="formAddComprobante">
+              <div class="row">
+                <div class="col-2">Tipo de comprobante:</div>
+                <div class="col-4">
+                  <select id="selTipoComprobante" name="selTipoComprobante" class="form-control form-select"
+                    formControlName="tipoComprobante">
+                    <option value="01">Guia de Remisión del remitente</option>
+                    <option *ngIf="esTranspExtranjero && !mostrarFacturaBoleta" value="02">Carta Porte</option>
+                    <option *ngIf="mostrarFacturaBoleta" value="03">Factura</option>
+                    <option *ngIf="mostrarFacturaBoleta" value="04">Boleta de Venta</option>
+
+                  </select>
+                </div>
+
+                <ng-container *ngIf="frmCtrlTipoComprobante?.value == '01' ; else ctrlBoletaFactura">
+                  <div class="col-2">
+                    <input type="text" class="form-control" id="txtNumSerieGuia" placeholder="Num Serie" maxlength="4"
+                      [ngClass]="{'is-invalid': frmCtrlNumSerieGuia.invalid}" formControlName="numSerieGuia"
+                      name="txtNumSerieGuia">
+                    <div *ngIf="frmCtrlNumSerieGuia.invalid" class="invalid-feedback">
+                      Debe ingresar la serie
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <input type="text" class="form-control" id="txtNumGuia" placeholder="N&uacute;mero" maxlength="8"
+                      [ngClass]="{'is-invalid': frmCtrlNumGuia.invalid}" formControlName="numGuia"
+                      name="txtNumGuia">
+                    <div *ngIf="frmCtrlNumGuia.invalid" class="invalid-feedback">
+                      Debe ingresar el n&uacute;mero
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <input type="text" class="form-control" id="txtNumRucGuia" placeholder="N&uacute;mero de RUC"
+                      pKeyFilter="pint" maxlength="11" [ngClass]="{'is-invalid': frmCtrlNumRucGuia.errors?.required}"
+                      formControlName="numRucGuia" name="txtNumRucGuia">
+                    <div *ngIf="frmCtrlNumRucGuia.errors?.required" class="invalid-feedback">
+                      Debe ingresar el RUC del remitente
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-template #ctrlBoletaFactura>
+                  <ng-container *ngIf="(frmCtrlTipoComprobante?.value == '03' || frmCtrlTipoComprobante?.value == '04') ; else ctrlCartaPorte">
+                    <div class="col-2">
+                      <input type="text" class="form-control" id="txtNumSerieBF" placeholder="Num Serie" maxlength="4"
+                        [ngClass]="{'is-invalid': frmCtrlNumSerieBoletaFactura.invalid}"
+                        formControlName="numSerieBF" name="txtNumSerieBF">
+                      <div *ngIf="frmCtrlNumSerieBoletaFactura.invalid" class="invalid-feedback">
+                        Debe ingresar la serie
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <input type="text" class="form-control" id="txtNumBF" placeholder="N&uacute;mero" maxlength="8"
+                        [ngClass]="{'is-invalid': frmCtrlNumBoletaFactura.invalid}" formControlName="numBF"
+                        name="txtNumBF">
+                      <div *ngIf="frmCtrlNumBoletaFactura.invalid" class="invalid-feedback">
+                        Debe ingresar el n&uacute;mero
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <input type="text" class="form-control" id="txtNumRucBF" placeholder="N&uacute;mero de RUC"
+                        pKeyFilter="pint" maxlength="11"
+                        [ngClass]="{'is-invalid': frmCtrlNumRucBoletaFactura.errors?.required}"
+                        formControlName="numRucBF" name="txtNumRucBF">
+                      <div *ngIf="frmCtrlNumRucBoletaFactura.errors?.required" class="invalid-feedback">
+                        Debe ingresar el RUC del comprobante de pago
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-template>
+
+
+
+                <ng-template #ctrlCartaPorte>
+                  <ng-container *ngIf="frmCtrlTipoComprobante?.value == '02'">
+                    <div class="col-2">
+                      <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="txtNumCartaPorte" placeholder="Carta Porte"
+                        [ngClass]="{'is-invalid': frmCtrlNumCartaPorte.invalid}"
+                        maxlength="20" formControlName="numCartaPorte" name="txtNumCartaPorte">
+                        <div id="validationCartaPorteFeedback" *ngIf="frmCtrlNumCartaPorte.invalid" class="invalid-feedback">
+                          Ingrese el n&uacute;mero de carta porte
+                        </div>
+                    </div>
+                    <div class="col-4">
+                      <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="txtEmpCartaPorte" placeholder="Empresa" maxlength="70"
+                        [ngClass]="{'is-invalid': frmCtrlEmpCartaPorte.invalid}"
+                        aria-describedby="validationEmpresaFeedback" formControlName="empCartaPorte"
+                        name="txtEmpCartaPorte">
+                      <div id="validationEmpresaFeedback" *ngIf="frmCtrlEmpCartaPorte.invalid" class="invalid-feedback">
+                        Nombre de empresa inv&aacute;lido
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-template>
+              </div>
+
+              <div class="row top-buffer">
+                <div class="col-2">Motivo del traslado:</div>
+                <div class="col-4">
+                  <select id="selMotivoTraslado" name="selMotivoTraslado" class="form-control form-select"
+                    formControlName="motivoTraslado">
+                    <option *ngFor="let motivo of motivosTraslado" [value]="motivo.codDatacat">
+                      {{motivo.codDatacat}} - {{motivo.desDataCat}}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-6" *ngIf="frmCtrlTipoComprobante?.value == '01' || frmCtrlTipoComprobante?.value == '03' || frmCtrlTipoComprobante?.value == '04'">
+                  <input type="text" class="form-control" id="txtRazonSocial" placeholder="Raz&oacute;n social"
+                    [readonly]="true" formControlName="razSocialGuia" name="txtRazonSocial">
+                </div>
+              </div>
+
+
+              <div class="row top-buffer" *ngIf="frmCtrlTipoComprobante?.value == '03' || frmCtrlTipoComprobante?.value == '04'">
+                <div class="col-2">Documento adquiriente:</div>
+                <div class="col-2">
+                  <select id="selTipoDocAdq" name="selTipoDocAdq" class="form-control form-select"
+                    [ngClass]="{'is-invalid': frmCtrlTipoDocAdquiriente.invalid}"
+                    formControlName="tipDocAdq">
+                    <option *ngFor="let tipdoc of catalogoTiposDocIdentidad" [value]="tipdoc.codDatacat">
+                      {{tipdoc.desDataCat}}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-2">
+                  <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="txtNumDocAdq" placeholder="Num Doc Identidad" 
+                    [ngClass]="{'is-invalid': frmCtrlNumDocAdquiriente.invalid}" formControlName="numDocAdq"
+                    aria-describedby="validationNumAdqFeedback"  name="txtNumDocAdq" [maxlength]="maxlengthNumDocAdq">
+                  <div id="validationNumAdqFeedback" *ngIf="frmCtrlNumDocAdquiriente.invalid" class="invalid-feedback">
+                    Debe ingresar el documento de identidad
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="txtNombreAdquiriente" maxlength="150" [readonly]="esDniRUC"
+                    placeholder="Nombre de Adquiriente" [ngClass]="{'is-invalid': frmCtrlNombreAdquiriente.invalid}" 
+                    formControlName="nombreAdq" name="txtNombreAdquiriente">
+                    <div *ngIf="frmCtrlNombreAdquiriente.invalid" class="invalid-feedback">
+                      Debe ingresar el nombre del adquiriente
+                    </div>
+                </div>
+              </div>
+
+              <div class="row top-buffer" *ngIf="frmCtrlTipoComprobante?.value == '01' || frmCtrlTipoComprobante?.value == '02'">
+                <div class="col-2">RUC del destinatario:</div>
+                <div class="col-4">
+                  <input type="text" class="form-control" id="txtRucDestinatario" placeholder="N&uacute;mero de RUC"
+                    pKeyFilter="pint" maxlength="11" [ngClass]="{'is-invalid': frmCtrlRucDestinatario.errors?.required}"
+                    formControlName="rucDestinatario" name="txtRucDestinatario">
+                  <div *ngIf="frmCtrlRucDestinatario.invalid" class="invalid-feedback">
+                    Debe ingresar el RUC
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" id="txtRazonSocialDestinatario"
+                    placeholder="Raz&oacute;n social" [readonly]="true" formControlName="razonSocialDestinatario"
+                    name="txtRazonSocialDestinatario">
+                </div>
+              </div>
+            </form>
+            <div class="row top-buffer">
+              <div class="col-2">Destino:</div>
+              <div class="col-6">
+                <p-autoComplete [(ngModel)]="ubigeoSeleccionado" name="selectUbigeoDestino"
+                  [suggestions]="ubigeosFiltrados"
+                  [inputStyleClass]="ubigeoSeleccionado == null ? 'ng-invalid ng-dirty' : ''"
+                  [ngClass]="{'is-invalid': ubigeoSeleccionado == null}" (completeMethod)="filtrarUbigeo($event)"
+                  [forceSelection]="true" [styleClass]="'autocompletarConDropDown'" field="desDataCat"
+                  [dropdown]="true">
+                  <ng-template let-ubigeo pTemplate="item">
+                    <div class="ubigeo-item">
+                      <div>{{ubigeo.desDataCat}}</div>
+                    </div>
+                  </ng-template>
+                </p-autoComplete>
+                <div *ngIf="ubigeoSeleccionado == null" class="invalid-feedback">
+                  Debe ingresar el destino
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </ng-container>
+    <div class="row top-buffer justify-content-center">
+      <div class="col-2">
+        <button type="button" id="btnCancelar" class="btn btn-primary btn-block" (click)="irPageComprobantes()">
+          <i class="bi bi-x-square-fill"></i>
+          &nbsp;Cancelar
+        </button>
+      </div>
+      <div class="col-2">
+        <button type="button" id="btnAgregar" class="btn btn-primary btn-block"
+          [disabled]="rptaDamSeriesDpmn?.data == null || rptaGuiaRemision?.estado === estadoValDcl.LOADING"
+          (click)="addDclComprobantes()">
+          <span class="spinner-border spinner-border-sm" *ngIf="rptaGuiaRemision?.estado === estadoValDcl.LOADING"
+            role="status" aria-hidden="true"></span>
+          <i class="bi bi-plus-square-fill"></i>
+          &nbsp;Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000" [rejectLabel] = "'Cancelar'"  [acceptLabel] = "'Aceptar'"></p-confirmDialog>

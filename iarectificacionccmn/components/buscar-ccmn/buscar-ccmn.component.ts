@@ -106,6 +106,7 @@ export class BuscarCcmnComponent implements OnInit {
                ) { }
 
   ngOnInit(): void {
+
     this.cargarInformacionFuncionario();
     this.buildForm();
     this.config.setTranslation({
@@ -344,7 +345,8 @@ upperCase(data:PuestoControl[]){
     let enviaConductor = this.frmCtrlTipoDocIdentidadConductor.value!=="" && this.frmCtrlNumDocIdentidadConductor.value!=="";
     let enviaRucRemitente = this.frmCtrlRucRemitente.value!=="";
     this.cargarCambioAduanaDAM();
-
+     this.cargarAduanaPuno(this.aduanaFuncionario);
+    //this.cargarAduanaDAM();
     if (this.consultaRectiCcmnForm.invalid) {
       this.messageService.clear();
       this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Por favor seleccione uno de los criterios a consultar' });
@@ -633,7 +635,7 @@ upperCase(data:PuestoControl[]){
     this.consultaRectiCcmnForm.controls.puestoControl.disable();
     this.consultaRectiCcmnForm.controls.anoDocumento.disable();
     this.consultaRectiCcmnForm.controls.numeroDocumento.disable();
-    this.cargarAduanaPuno(this.aduanaFuncionario);
+
     this.consultaRectiCcmnForm.controls.fechaInicio.enable();
     this.consultaRectiCcmnForm.controls.fechaFin.enable();
 

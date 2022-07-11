@@ -426,68 +426,71 @@ upperCase(data:PuestoControl[]){
       paramConsultar.funcionario.aduana="181";
     }
 
-    // this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_JEFE_SUPERVISOR").subscribe((final:any)=>{
+      this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_JEFE_SUPERVISOR").subscribe( (data : PerfilUsuario[]) => {
 
-    forkJoin(
-    this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_FUNCIONA_REGISTRO")
-    ).subscribe(
-      (res)=>{
-        if(res.length>=1){
-           paramConsultar.funcionario.tienePerfilJefeSupervisor=true;
-          this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
-        }else{
-          return;
-        }
-      },
-      (err:HttpErrorResponse)=>{
-        if(err.error instanceof Error){
-          this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Por favor seleccione uno de los criterios a consultar' });
-          this.loadingConsultar = false;
-        }else if(err.status==422){
-          forkJoin(
-            this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_JEFE_SUPERVISOR")
-            ).subscribe(
-              (res)=>{
-                if(res.length>=1){
-                   paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
-                  this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
-                }else{
-                  return;
-                }
-              },
-              (err:HttpErrorResponse)=>{
-                if(err.error instanceof Error){
-                  this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Por favor seleccione uno de los criterios a consultar JEFE' });
-                  this.loadingConsultar = false;
-                }else if(err.status==422){
-                  paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
-                  this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
-                }else{
-                  paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
-                  this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
-                }
-              }
-            );
-        }else{
-          this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Error servidor remoto' });
-        }
+      if (data.length>0) {
+        paramConsultar.funcionario.tienePerfilJefeSupervisor=true;
       }
-    );
+      else {
+        paramConsultar.funcionario.tienePerfilJefeSupervisor= false;
 
-    // forkJoin(
-    //   this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_JEFE_SUPERVISOR"),
-    //   this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_FUNCIONA_REGISTRO")
-    //   ).subscribe(
-    //     (res)=>{
-    //       if(res.length>=1){
-    //         this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
-    //       }else{
-    //         return;
-    //       }
+      }
+      this.messageService.clear;
+    //   /*Se consume el servicio REST de validacion y busqueda de CCMS*/
+       //paramConsultar.funcionario.tienePerfilJefeSupervisor=true;
+      this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
+    // this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_JEFE_SUPERVISOR").subscribe( (data : PerfilUsuario[]) => {
+    //   if (data.length>0) {
+    //     paramConsultar.funcionario.tienePerfilJefeSupervisor=true;
+    //   }else {
+    //      paramConsultar.funcionario.tienePerfilJefeSupervisor= false;
+    //   }
+    //         this.perfilesUsuarioService.buscar(this.usuarioLogin, "CPASO_FUNCIONA_REGISTRO").subscribe( (data2 : PerfilUsuario[]) => {
+    //           if (data2.length>0) {
+    //             paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
+    //             this.perfilRegistro=true;
+    //           }
+    //           else {
+    //             paramConsultar.funcionario.tienePerfilJefeSupervisor= false;
+    //             this.perfilRegistro=true;
+    //           }
+    //           if(paramConsultar.funcionario.tienePerfilJefeSupervisor||this.perfilRegistro){
+    //             this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
+    //             }
+    //       },()  =>{
+    //           //  paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
+    //           this.messageService.clear;
+    //           /*Se consume el servicio REST de validacion y busqueda de CCMS*/
+    //           this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
+    //             //this.loadingConsultar = false;
+    //       })
+    //     if(paramConsultar.funcionario.tienePerfilJefeSupervisor||this.perfilRegistro){
+    //       this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
     //     }
-    //   );
+    // //   //this.loadingConsultar = false;
+
+    // // },()  =>{
+    },(err:HttpErrorResponse)  =>{
+      if(err.error instanceof Error){
+        //this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Por favor seleccione uno de los criterios a consultar JEFE' });
+        this.loadingConsultar = false;
+      }else if(err.status==422){
+        paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
+        this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
+      }else{
+        this.messageService.add({ key: 'msj', severity: 'warn', detail: 'Error servidor remoto JEFE' });
+      }
+    //  paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
+    this.messageService.clear;
+    /*Se consume el servicio REST de validacion y busqueda de CCMS*/
+    paramConsultar.funcionario.tienePerfilJefeSupervisor=false;
+    this.buscarRectiCcmnService.buscarParaRectificar(paramConsultar);
+      //this.loadingConsultar = false;
+   // })
+    })
 
   }
+
 
   public getPerfilesUsuario( usuario: string,paramConsultar:ParamBusqCcmnParaRectificar,perfilFuncionario:string) {
 
